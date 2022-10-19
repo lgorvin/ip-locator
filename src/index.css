@@ -16,10 +16,12 @@ body {
 }
 
 .leaflet-container {
-  height: 844px;
-  width: 390px;
+  height: 150vh;
+  width: 100vw;
 }
 
 .behind {
   z-index: -1;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
