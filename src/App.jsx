@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
 import ReactLoading from "react-loading";
 
-import { apiKey } from "./newapi";
+import { apiKey } from "./api";
 
 const App = () => {
   const [address, setAddress] = useState("");
