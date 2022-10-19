@@ -11,4 +11,15 @@ body {
 
 .bg1 {
   background-image: url('./assets/images/pattern-bg.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.leaflet-container {
+  height: 844px;
+  width: 390px;
+}
+
+.behind {
+  z-index: -1;
 }
