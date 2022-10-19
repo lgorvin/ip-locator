@@ -15,6 +15,8 @@ const App = () => {
   const [isp, setIsp] = useState("");
   const [test, setTest] = useState("");
 
+  const [credit, setCredit] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   function MyComponent() {
@@ -43,10 +45,19 @@ const App = () => {
           setLat(res.data.latitude);
           setLong(res.data.longitude);
           setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          setCredit(true);
+          setLat(37.40599);
+          setLong(-122.078514);
+          console.log("Used all API credits");
+          console.log(err.response);
         });
     } catch (error) {
       setLoading(false);
       console.log(error.response);
+      console.log("Used all API credits");
     }
   };
 
@@ -66,6 +77,13 @@ const App = () => {
       <h1 className="text-center pt-12 lg:pt-16 font-medium text-white text-2xl lg:text-4xl duration-500">
         IP Address Tracker
       </h1>
+      {credit ? (
+        <h1 className="text-center mt-3 mb-[-10px] lg:mb-[-30px] font-bold">
+          All API Credit requests have been used, try again tomorrow.
+        </h1>
+      ) : (
+        <></>
+      )}
       <div className="mt-6 lg:mt-12 flex justify-center">
         <input
           className="h-14 w-[264px] lg:w-[550px] ml-6 rounded-l-lg px-4 shadow-lg duration-700"
@@ -147,7 +165,7 @@ const App = () => {
           </div>
           <div className="lg:mt-10 lg:mb-10">
             <h1 className="text-center text-xs text-gray-400 font-bold pt-3">
-              TIMEZONE
+              TIMEZONE (UTC)
             </h1>
             <h2 className="text-center text-xl pt-1 mx-6 font-medium">
               {loading ? (
@@ -160,7 +178,7 @@ const App = () => {
                   />
                 </div>
               ) : (
-                <>UTC {timezone}</>
+                <>{timezone}</>
               )}
             </h2>
           </div>
