@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
 import ReactLoading from "react-loading";
 
-import { apiKey } from "./api2";
+import { apiKey } from "./api";
 
 const App = () => {
   const [address, setAddress] = useState("");
@@ -14,6 +14,8 @@ const App = () => {
   const [long, setLong] = useState("");
   const [isp, setIsp] = useState("");
   const [test, setTest] = useState("");
+  const [flag, setFlag] = useState("");
+  const [errMsg, setErrMsg] = useState("");
 
   const [credit, setCredit] = useState(false);
 
@@ -44,7 +46,9 @@ const App = () => {
           setIsp(res.data.asn.name);
           setLat(res.data.latitude);
           setLong(res.data.longitude);
+          setFlag(res.data.flag);
           setLoading(false);
+          setCredit(false);
         })
         .catch((err) => {
           setLoading(false);
@@ -52,7 +56,8 @@ const App = () => {
           setLat(37.40599);
           setLong(-122.078514);
           console.log("Used all API credits");
-          console.log(err.response);
+          console.log(err.response.data.message);
+          setErrMsg(err.response.data.message);
         });
     } catch (error) {
       setLoading(false);
@@ -79,7 +84,7 @@ const App = () => {
       </h1>
       {credit ? (
         <h1 className="text-center mt-3 mb-[-10px] lg:mb-[-30px] font-bold">
-          All API Credit requests have been used, try again tomorrow.
+          {errMsg}
         </h1>
       ) : (
         <></>
@@ -126,10 +131,10 @@ const App = () => {
       <div className="flex justify-center">
         <div className="bg-white h-auto min-w-[326px] lg:min-w-[900px] opacity-95 shadow-lg mx-6 mt-6 lg:mt-10 rounded-lg grid grid-cols-1 lg:grid-cols-4 duration-700">
           <div className=" lg:mt-10 lg:mb-10">
-            <h1 className="text-center text-xs text-gray-400 font-bold pt-3">
+            <h1 className="text-center text-xs lg:text-sm text-gray-400 font-bold pt-3">
               IP ADDRESS
             </h1>
-            <h2 className="text-center text-xl mx-6 pt-1 font-medium">
+            <h2 className="text-center text-xl lg:text-2xl mx-6 pt-1 font-medium">
               {loading ? (
                 <div className="flex justify-center">
                   <ReactLoading
@@ -145,10 +150,10 @@ const App = () => {
             </h2>
           </div>
           <div className="lg:mt-10 lg:mb-10">
-            <h1 className="text-center text-xs text-gray-400 font-bold pt-3">
+            <h1 className="text-center text-xs lg:text-sm text-gray-400 font-bold pt-3">
               LOCATION
             </h1>
-            <h2 className="text-center text-xl pt-1 mx-6 font-medium">
+            <h2 className="text-center text-xl lg:text-2xl pt-1 mx-6 font-medium">
               {loading ? (
                 <div className="flex justify-center">
                   <ReactLoading
@@ -161,13 +166,16 @@ const App = () => {
               ) : (
                 location
               )}
+              <div className="flex justify-center lg:mt-4">
+                <img src={flag} alt="" />
+              </div>
             </h2>
           </div>
-          <div className="lg:mt-10 lg:mb-10">
-            <h1 className="text-center text-xs text-gray-400 font-bold pt-3">
+          <div className="lg:mt-10 lg:mb-10 ">
+            <h1 className="text-center text-xs lg:text-sm text-gray-400 font-bold pt-3">
               TIMEZONE (UTC)
             </h1>
-            <h2 className="text-center text-xl pt-1 mx-6 font-medium">
+            <h2 className="text-center text-xl lg:text-2xl pt-1 mx-6 font-medium">
               {loading ? (
                 <div className="flex justify-center">
                   <ReactLoading
@@ -183,10 +191,10 @@ const App = () => {
             </h2>
           </div>
           <div className="mb-2 lg:mt-10 lg:mb-10">
-            <h1 className="text-center text-xs text-gray-400 font-bold pt-3">
+            <h1 className="text-center text-xs lg:text-sm text-gray-400 font-bold pt-3">
               ISP
             </h1>
-            <h2 className="text-center text-xl pt-1 mx-6 font-medium">
+            <h2 className="text-center text-xl lg:text-2xl pt-1 mx-6 font-medium">
               {loading ? (
                 <div className="flex justify-center">
                   <ReactLoading
@@ -204,16 +212,14 @@ const App = () => {
         </div>
       </div>
       <div className="absolute behind mt-[180px] lg:mt-[250px] duration-500">
-        <MapContainer center={[lat, long]} zoom={14} scrollWheelZoom={true}>
+        <MapContainer center={[lat, long]} zoom={16} scrollWheelZoom={true}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <MyComponent />
           <Marker position={[lat, long]}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
+            <Popup>{isp}</Popup>
           </Marker>
         </MapContainer>
       </div>
